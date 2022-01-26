@@ -1,0 +1,8 @@
+node_modules
+artifacts
+cache
+coverage
+scripts/deploy.ts
+hardhat.config.ts
+tsconfig.json
+test/index.ts
