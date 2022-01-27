@@ -123,4 +123,39 @@ describe('Reakoin Contract', () => {
       expect(addr2Balance).to.equal(amountTransfer2)
     })
   })
+
+  describe('Aproove & Transfer tokens', () => {
+    it('Should fail if msg sender not approve', async function () {
+      const amountTransfer = ethers.utils.parseEther('1000')
+      //owner transfer to addr1
+      await reakoin.transfer(addr1.address, amountTransfer)
+      //transfer addd1 to add2
+      await expect(
+        reakoin
+          .connect(addr1)
+          .transferFrom(addr1.address, addr2.address, amountTransfer),
+      ).to.be.reverted
+    })
+
+    it('Should transferFrom with approve tokens', async function () {
+      const amountTransfer = ethers.utils.parseEther('1000')
+      //owner transfer to addr1
+      await reakoin.transfer(addr1.address, amountTransfer)
+      //transfer addd1 to add2
+
+      await reakoin
+        .connect(addr1)
+        .approve(addr2.address, amountTransfer)
+        .then(() => {
+          reakoin
+            .connect(addr1)
+            .transferFrom(addr1.address, addr2.address, amountTransfer)
+            .then(() => {
+              expect(reakoin.connect(addr2).balanceOf(addr1.address)).to.equal(
+                0,
+              )
+            })
+        })
+    })
+  })
 })
