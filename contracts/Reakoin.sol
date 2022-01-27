@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "./Contract.sol";
 
-contract Reakoin is Contract, Ownable {
+contract Reakoin is Contract {
 
     //States variables 
     
@@ -13,7 +12,7 @@ contract Reakoin is Contract, Ownable {
 
     constructor(string memory name, string memory symbols) Contract(name, symbols){
       _mint(msg.sender, supply);
+    
     }
 
- 
 }

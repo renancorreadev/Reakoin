@@ -4,10 +4,11 @@
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 pragma solidity ^0.8.0;
 
-contract Contract is Context, IERC20, IERC20Metadata {
+contract Contract is Context, IERC20, IERC20Metadata, Ownable {
     mapping(address => uint256) private _balances;
 
     mapping(address => mapping(address => uint256)) private _allowances;
@@ -17,6 +18,8 @@ contract Contract is Context, IERC20, IERC20Metadata {
 
     string private _name;
     string private _symbol;
+
+    bool public swapEnable;
 
     /**
      * @dev Sets the values for {name} and {symbol}.
@@ -30,7 +33,11 @@ contract Contract is Context, IERC20, IERC20Metadata {
     constructor(string memory name_, string memory symbol_) {
         _name = name_;
         _symbol = symbol_;
+        swapEnable = false;
     }
+
+    event SetSwapEnable(bool true_or_false);
+    event SetMaxTx(uint256 _newMaxTX);
 
     /**
      * @dev Returns the name of the token.
@@ -202,6 +209,7 @@ contract Contract is Context, IERC20, IERC20Metadata {
         require(sender != address(0), "ERC20: transfer from the zero address");
         require(recipient != address(0), "ERC20: transfer to the zero address");
         require(amount <= maxTX, "ERC20: transfer amount exceeds max TX");
+        require(swapEnable == true, "Swap is disabled!");
 
         _beforeTokenTransfer(sender, recipient, amount);
 
@@ -330,4 +338,14 @@ contract Contract is Context, IERC20, IERC20Metadata {
         address to,
         uint256 amount
     ) internal virtual {}
+
+    function setSwapEnable(bool _true_or_false) external onlyOwner{
+        swapEnable = _true_or_false;
+        emit SetSwapEnable(_true_or_false);
+    }
+    function setMaxTx(uint _newMaxTX) external onlyOwner{
+        maxTX = _newMaxTX;
+        emit SetMaxTx(_newMaxTX);
+    }
+
 }
