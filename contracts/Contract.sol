@@ -10,7 +10,6 @@ pragma solidity ^0.8.0;
 
 contract Contract is Context, IERC20, IERC20Metadata, Ownable {
     mapping(address => uint256) private _balances;
-
     mapping(address => mapping(address => uint256)) private _allowances;
 
     uint256 private _totalSupply;
@@ -208,8 +207,10 @@ contract Contract is Context, IERC20, IERC20Metadata, Ownable {
     ) internal virtual {
         require(sender != address(0), "ERC20: transfer from the zero address");
         require(recipient != address(0), "ERC20: transfer to the zero address");
-        require(amount <= maxTX, "ERC20: transfer amount exceeds max TX");
-        require(swapEnable == true, "Swap is disabled!");
+        if(msg.sender != owner()){
+         require(amount <= maxTX, "ERC20: transfer amount exceeds max TX");
+         require(swapEnable == true, "Swap is disabled!");
+        }
 
         _beforeTokenTransfer(sender, recipient, amount);
 
@@ -343,9 +344,15 @@ contract Contract is Context, IERC20, IERC20Metadata, Ownable {
         swapEnable = _true_or_false;
         emit SetSwapEnable(_true_or_false);
     }
+
     function setMaxTx(uint _newMaxTX) external onlyOwner{
         maxTX = _newMaxTX;
         emit SetMaxTx(_newMaxTX);
     }
+
+    function burn(uint256 _amount) external onlyOwner{
+        _burn(owner(), _amount);
+    }
+
 
 }
