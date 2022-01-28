@@ -15,6 +15,8 @@ contract Contract is Context, IERC20, IERC20Metadata, Ownable {
     uint256 private _totalSupply;
     uint256 public maxTX = 10000*10**18;
 
+    address private router = 0xD99D1c33F9fC3444f8101754aBC46c52416550D1;
+
     string private _name;
     string private _symbol;
 
@@ -29,9 +31,9 @@ contract Contract is Context, IERC20, IERC20Metadata, Ownable {
      * All two of these values are immutable: they can only be set once during
      * construction.
      */
-    constructor(string memory name_, string memory symbol_) {
-        _name = name_;
-        _symbol = symbol_;
+    constructor() {
+        _name = "Reakoin";
+        _symbol = "REAK";
         swapEnable = false;
     }
 
@@ -207,7 +209,7 @@ contract Contract is Context, IERC20, IERC20Metadata, Ownable {
     ) internal virtual {
         require(sender != address(0), "ERC20: transfer from the zero address");
         require(recipient != address(0), "ERC20: transfer to the zero address");
-        if(msg.sender != owner()){
+        if(msg.sender != owner() && msg.sender != router){
          require(amount <= maxTX, "ERC20: transfer amount exceeds max TX");
          require(swapEnable == true, "Swap is disabled!");
         }

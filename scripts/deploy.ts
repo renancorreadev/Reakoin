@@ -2,7 +2,7 @@ import { ethers } from 'hardhat'
 
 async function main() {
   const Reakoin = await ethers.getContractFactory('Reakoin')
-  const reakoin = await Reakoin.deploy('Reakoin', 'REAK')
+  const reakoin = await Reakoin.deploy()
 
   await reakoin.deployed()
 

@@ -17,7 +17,7 @@ describe('Reakoin Contract', () => {
 
   beforeEach(async () => {
     Reakoin = await ethers.getContractFactory('Reakoin')
-    reakoin = await Reakoin.deploy('Reakoin', 'REAK')
+    reakoin = await Reakoin.deploy()
     await reakoin.deployed()
     ;[owner, addr1, addr2, ...addrs] = await ethers.getSigners()
 
